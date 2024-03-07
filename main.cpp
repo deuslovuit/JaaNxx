@@ -1,18 +1,25 @@
+// Include necessary libraries
 #include <iostream>
 #include <string>
 
+// Using standard namespace for convenience
 using namespace std;
 
+// Define the Account class
 class Account {
+    // Protected attributes accessible by derived classes
 protected:
-    long int account_No;
-    string name;
-    double balance;
-    string mobile_No;
+    long int account_No;    // Account number
+    string name;            // Account holder's name
+    double balance;         // Account balance
+    string mobile_No;       // Account holder's mobile number
 
+    // Public methods accessible by all
 public:
+    // Constructor to initialize account details
     Account(long int accNo, string n, double bal, string mob) : account_No(accNo), name(n), balance(bal), mobile_No(mob) {}
 
+    // Getter methods to access account details
     long int getAccountNo() const {
         return account_No;
     }
@@ -29,24 +36,32 @@ public:
         return mobile_No;
     }
 
+    // Pure virtual function to display account details (to be implemented by derived classes)
     virtual void display() const = 0;
 };
 
+// Define the UserAccount class derived from Account
 class UserAccount : public Account {
+    // Private attribute specific to UserAccount
 private:
-    int PIN;
+    int PIN;    // User's PIN
 
+    // Public methods accessible by all
 public:
+    // Constructor to initialize user account details
     UserAccount(long int accNo, string n, int pin, double bal, string mob) : Account(accNo, n, bal, mob), PIN(pin) {}
 
+    // Getter method to access user's PIN
     int getPIN() const {
         return PIN;
     }
 
+    // Method to authenticate user using PIN
     bool authenticate(int pin) const {
         return pin == PIN;
     }
 
+    // Method to update user's mobile number
     void setMobile(string mob_prev, string mob_new) {
         if (mob_prev == mobile_No) {
             mobile_No = mob_new;
@@ -56,6 +71,7 @@ public:
         }
     }
 
+    // Method to withdraw cash from user's account
     void cashWithdraw(int amount) {
         if (amount > 0 && amount < balance) {
             balance -= amount;
@@ -66,6 +82,7 @@ public:
         }
     }
 
+    // Method to display user's account details
     void display() const override {
         cout << endl << "*** User Details are :- ";
         cout << endl << "-> Account no :" << getAccountNo();
@@ -75,10 +92,14 @@ public:
     }
 };
 
+// Define the AdminAccount class derived from Account
 class AdminAccount : public Account {
+    // Public methods accessible by all
 public:
+    // Constructor to initialize admin account details
     AdminAccount(long int accNo, string n, double bal, string mob) : Account(accNo, n, bal, mob) {}
 
+    // Method to display admin's account details
     void display() const override {
         cout << endl << "*** Admin Details are :- ";
         cout << endl << "-> Account no :" << getAccountNo();
@@ -88,13 +109,19 @@ public:
     }
 };
 
+// Define the Bank class to manage user and admin interactions
 class Bank {
+    // Private attributes to store user and admin accounts
 private:
     UserAccount user;
     AdminAccount admin;
+
+    // Public methods accessible by all
 public:
+    // Constructor to initialize Bank with user and admin accounts
     Bank(UserAccount u, AdminAccount a) : user(u), admin(a) {}
 
+    // Method to run the ATM interface
     void run() {
         int choice = 0;
         
@@ -154,7 +181,9 @@ public:
     }
 };
 
+// The main function to start the program
 int main() {
+    // Prompt the user to select user type
     int userType;
     cout << "Welcome to the bank ATM!" << endl;
     cout << "Select User Type:" << endl;
@@ -162,12 +191,14 @@ int main() {
     cout << "2. Admin" << endl;
     cin >> userType;
 
+    // Process based on the user type selected
     if (userType == 1) {
-        // Create and authenticate user account
+        // For user type
         int userPIN;
         cout << "Enter your PIN to log in: ";
         cin >> userPIN;
 
+        // Authenticate user
         UserAccount user(987654321, "Hardik", 1234, 50000, "9370054900");
         if (!user.authenticate(userPIN)) {
             cout << "Invalid PIN. Exiting..." << endl;
@@ -178,11 +209,12 @@ int main() {
         Bank bank(user, AdminAccount(0, "", 0, ""));
         bank.run();
     } else if (userType == 2) {
-        // Create and authenticate admin account
+        // For admin type
         int adminPIN;
         cout << "Enter your PIN to log in as admin: ";
         cin >> adminPIN;
 
+        // Authenticate admin
         AdminAccount admin(123456789, "Admin", 1000000, "9876543210");
         if (adminPIN != 1234) {
             cout << "Invalid admin PIN. Exiting..." << endl;
@@ -193,6 +225,7 @@ int main() {
         Bank bank(UserAccount(0, "", 0, 0, ""), admin);
         bank.run();
     } else {
+        // Invalid user type
         cout << "Invalid user type. Exiting..." << endl;
         exit(1);
     }
