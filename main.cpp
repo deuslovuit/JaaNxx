@@ -196,6 +196,5 @@ int main() {
         cout << "Invalid user type. Exiting..." << endl;
         exit(1);
     }
-
     return 0;
 }
