@@ -122,7 +122,7 @@ public:
     Bank(UserAccount u, AdminAccount a) : user(u), admin(a) {}
 
     // Method to run the ATM interface
-    void run() {
+    void runUser() {
         int choice = 0;
         
         do {
@@ -133,8 +133,7 @@ public:
             cout << endl << "2. Cash withdraw for User";
             cout << endl << "3. Show User Details";
             cout << endl << "4. Update User Mobile no.";
-            cout << endl << "5. Show Admin Details";
-            cout << endl << "6. Exit" << endl;
+            cout << endl << "5. Exit" << endl;
             cin >> choice;
 
             switch (choice) {
@@ -162,12 +161,7 @@ public:
                     user.setMobile(oldMobileNo, newMobileNo);
                     break;
                 }
-
                 case 5:
-                    admin.display();
-                    break;
-
-                case 6:
                     exit(0);
                     break;
 
@@ -179,16 +173,57 @@ public:
             cin.get();
         } while (true);
     }
+    void runAdmin(){
+        int choice = 0;
+        
+        do {
+            system("cls");
+            cout << endl << "**** Welcome to ATM *****" << endl;
+            cout << endl << "Select Options ";
+            cout << endl << "1. Check Admin Balance";
+            cout << endl << "2. Show User Details";
+            cout << endl << "3. Show Admin Details";
+            cout << endl << "4. Exit" << endl;
+            cin >> choice;
+
+            switch (choice) {
+                case 1:
+                    cout << endl << "Admin's Bank balance is :" << admin.getBalance();
+                    break;
+                case 2:
+                    user.display();
+                    break;
+
+                case 3:
+                    admin.display();
+                    break;
+                case 4:
+                    exit(0);
+                    break;
+
+                default:
+                    cout << endl << "Enter Valid Data !!!";
+            }
+            cout << endl << "Press any key to continue...";
+            cin.ignore();
+            cin.get();
+        } while (true);
+    }
+    
 };
 
 // The main function to start the program
 int main() {
     // Prompt the user to select user type
+    UserAccount user(987654321, "Hardik", 1234, 50000, "9370054900");
+    AdminAccount admin(123456789, "Admin", 1000000, "9876543210");
+    jump:
     int userType;
     cout << "Welcome to the bank ATM!" << endl;
     cout << "Select User Type:" << endl;
     cout << "1. User" << endl;
     cout << "2. Admin" << endl;
+    cout << "Enter your choice: ";
     cin >> userType;
 
     // Process based on the user type selected
@@ -199,7 +234,6 @@ int main() {
         cin >> userPIN;
 
         // Authenticate user
-        UserAccount user(987654321, "Hardik", 1234, 50000, "9370054900");
         if (!user.authenticate(userPIN)) {
             cout << "Invalid PIN. Exiting..." << endl;
             exit(1);
@@ -207,27 +241,28 @@ int main() {
 
         // Run user interface
         Bank bank(user, AdminAccount(0, "", 0, ""));
-        bank.run();
+        bank.runUser();
     } else if (userType == 2) {
         // For admin type
         int adminPIN;
         cout << "Enter your PIN to log in as admin: ";
         cin >> adminPIN;
 
-        // Authenticate admin
-        AdminAccount admin(123456789, "Admin", 1000000, "9876543210");
         if (adminPIN != 1234) {
             cout << "Invalid admin PIN. Exiting..." << endl;
             exit(1);
         }
 
         // Run admin interface
-        Bank bank(UserAccount(0, "", 0, 0, ""), admin);
-        bank.run();
+        Bank bank(UserAccount(987654321, "Hardik", 1234, 50000, "9370054900"), admin);
+        bank.runAdmin();
     } else {
         // Invalid user type
-        cout << "Invalid user type. Exiting..." << endl;
-        exit(1);
-    }
+        cout << "no options Please select again." << endl;
+        cin.ignore();
+        cin.get(); // to hold the console window
+        system("cls"); // to clear the console window
+        goto jump;
+        }
     return 0;
 }
