@@ -211,18 +211,39 @@ public:
     }
     
 };
+class Contact {
+private:
+    string name;
+    string address;
+    string email;
+    string phoneNumber;
 
+public:
+    // Constructor to initialize contact details
+    Contact(string n, string addr, string e, string phone) : name(n), address(addr), email(e), phoneNumber(phone) {}
+
+    // Method to display contact details
+    void display() const {
+        cout << endl << "*** Maintenance Contact Details are :- "<< endl;
+        cout << "Name: " << name << endl;
+        cout << "Address: " << address << endl;
+        cout << "Email: " << email << endl;
+        cout << "Phone Number: " << phoneNumber << endl;
+    }
+};
 // The main function to start the program
 int main() {
     // Prompt the user to select user type
     UserAccount user(987654321, "Hardik", 1234, 50000, "9370054900");
     AdminAccount admin(123456789, "Admin", 1000000, "9876543210");
+    Contact contact("Pawitra jongpae", "pattanakarn 26", "jo.pawitra_st@tni.ac.th", "555-1234");// Create a Maintenance contact
     jump:
     int userType;
     cout << "Welcome to the bank ATM!" << endl;
     cout << "Select User Type:" << endl;
     cout << "1. User" << endl;
     cout << "2. Admin" << endl;
+    cout << "3. Maintenance Contact" << endl;
     cout << "Enter your choice: ";
     cin >> userType;
 
@@ -256,7 +277,12 @@ int main() {
         // Run admin interface
         Bank bank(UserAccount(987654321, "Hardik", 1234, 50000, "9370054900"), admin);
         bank.runAdmin();
-    } else {
+    } 
+    else if (userType == 3) {
+        // For contact type
+        contact.display();
+    }
+    else {
         // Invalid user type
         cout << "no options Please select again." << endl;
         cin.ignore();
